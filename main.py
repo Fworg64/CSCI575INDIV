@@ -5,9 +5,13 @@
 # l2 = g(t + dt/2, wn + l1*dt/2)
 # k1 = f(t, th; w) = dth
 
-import matplotlib
+import matplotlib.pyplot
 import numpy as np
 import scipy.optimize
+
+from datetime import datetime  
+
+now = datetime.now()
 
 cont_dt = .2
 dt = .02
@@ -151,14 +155,27 @@ for t in np.arange(0.0,1.2,dt):
   force_rec.append(control_force)
   indices.append(indices[-1]+1)
   
+# Get Datestamp
+then = datetime.now()
+time_take = then - now
+print(str(time_take) + " seconds")
+now_str = now.strftime("%m_%d_%Y_%H_%M_%S")
 # Plot states
-matplotlib.pyplot.figure()
+matplotlib.pyplot.ioff()
+
+fig = matplotlib.pyplot.figure()
 matplotlib.pyplot.plot(indices, theta_rec, indices, omega_rec)
 matplotlib.pyplot.legend(["theta", "omega"])
-matplotlib.pyplot.figure()
+matplotlib.pyplot.savefig('./figs/theta_omega_plot' + now_str + '.png')
+matplotlib.pyplot.close(fig)
+
+fig = matplotlib.pyplot.figure()
 matplotlib.pyplot.plot(indices, force_rec)
 matplotlib.pyplot.legend(["force"])
+matplotlib.pyplot.savefig('./figs/force_plot' + now_str + '.png')
+matplotlib.pyplot.close(fig)
 
+print("Goodbye!")
 
 # Change forcing equation to MPC solver which uses same model but smaller 
 # Control time step
